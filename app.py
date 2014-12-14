@@ -14,9 +14,19 @@ def jsonify(data):
     return json.dumps(data, default=json_util.default)
 
 # This route will return a list in JSON format
-@app.route('/games/list')
+@app.route('/games')
 def games_list():
     return jsonify([game for game in db.games.find()])
+
+@app.route('/winners', methods=['GET'])
+def winners_list():
+    return jsonify([game for game in db.winners.find()])
+
+@app.route('/winners', methods=['POST'])
+def winners_post():
+    print(request.form)
+    return jsonify(db.winners.save(request.get_json()))
+
 
 if __name__ == '__main__':
     app.run(
