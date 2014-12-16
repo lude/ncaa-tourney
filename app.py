@@ -1,8 +1,10 @@
 from flask import Flask, request
 from pymongo import MongoClient
-import json
+from pymongo import ASCENDING
 from bson import json_util
 from bson.objectid import ObjectId
+
+import json
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -23,7 +25,7 @@ def jsonify(data):
 # This route will return a list in JSON format
 @app.route('/games')
 def games_list():
-    return jsonify([game for game in db.games.find()])
+    return jsonify([game for game in db.games.find().sort("datetime",ASCENDING)])
 
 @app.route('/winners/<oid>', methods=['GET'])
 def winners_list(oid):
