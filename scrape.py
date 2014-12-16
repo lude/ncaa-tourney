@@ -2,9 +2,11 @@
 
 from bs4 import BeautifulSoup
 from pprint import pprint
+from dateutil.parser import parse
 import requests
 import re
 import pymongo
+import datetime
 
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
@@ -40,6 +42,13 @@ for x in soup.find_all('tr'):
             pprint(game)
             game['team0'] = {}
             game['team1'] = {}
+            if game['time'] == "Noon ET":
+                game['time'] = "12:00 p.m ET"
+            if "Jan" in game['date']:
+                parseable = "%s, 2015 %s" % (game['date'], game['time'])
+            else:
+                parseable = "%s %s" % (game['date'], game['time'])
+            game['datetime'] = parse(parseable)
             if "(" in teams[0]:
                 p = re.compile(r'\((\d+)\) (\w+)')
                 m = p.match(teams[0])
@@ -58,4 +67,7 @@ for x in soup.find_all('tr'):
             if not game.get('stadium'):
                 game['location'] = 'St. Petersburg, FL'
                 game['stadium'] = 'Tropicana Field'
-            db.games.insert(game)
+            if game['datetime'] > datetime.datetime(2014, 12, 26, 0, 0):
+                db.games.insert(game)
+            else:
+                print("Not inserting %s because datetime: %s" % (game['name'], game['datetime']))
