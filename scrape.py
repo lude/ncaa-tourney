@@ -50,14 +50,14 @@ for x in soup.find_all('tr'):
                 parseable = "%s %s" % (game['date'], game['time'])
             game['datetime'] = parse(parseable)
             if "(" in teams[0]:
-                p = re.compile(r'\((\d+)\) (\w+)')
+                p = re.compile(r'\((\d+)\) ([\w\s]+)')
                 m = p.match(teams[0])
                 game['team0']['rank'] = m.group(1)
                 game['team0']['name'] = m.group(2)
             else:
                 game['team0']['name'] = teams[0]
             if "(" in teams[1]:
-                p = re.compile(r'\((\d+)\) (\w+)')
+                p = re.compile(r'\((\d+)\) ([\w\s]+)')
                 m = p.match(teams[1])
                 game['team1']['rank'] = m.group(1)
                 game['team1']['name'] = m.group(2)
