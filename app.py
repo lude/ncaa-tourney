@@ -33,6 +33,10 @@ def winners_list(oid):
         db.winners.find_one({'_id':ObjectId(oid)})
     )
 
+@app.route('/winners', methods=['GET'])
+def winners_listall():
+    return jsonify([winner for winner in db.winners.find()])
+
 @app.route('/winners', methods=['POST'])
 def winners_post():
     print(request.form)
