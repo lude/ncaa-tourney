@@ -10,7 +10,7 @@ import datetime
 
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
-db = client.ncaa_tourney
+db = client.cfb_bowl_games
 
 #r = requests.get('http://espn.go.com/college-football/story/_/id/11419086/2014-15-college-football-bowl-schedule')
 #r = requests.get('http://www.fbschedules.com/ncaa/college-football-bowl-schedule.php')
@@ -38,7 +38,6 @@ for x in soup.find_all('h3'):
         if len(lines) == 4:
             if "Jan. 11" in lines[0]:
                 continue
-            print(lines)
             for idx, val in enumerate(lines):
                 if idx == 0:
                     game['name'] = val
@@ -80,8 +79,7 @@ for x in soup.find_all('h3'):
             continue
 
         print(game)
-
-
+        db.games.insert(game)
 
 
     """
