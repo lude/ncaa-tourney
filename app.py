@@ -10,7 +10,7 @@ import json
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)
-db = client.ncaa_tourney
+db = client.cfb_bowl_games
 
 def jsonify(data):
     if isinstance(data, list):
@@ -27,20 +27,20 @@ def jsonify(data):
 def games_list():
     return jsonify([game for game in db.games.find().sort("datetime",ASCENDING)])
 
-@app.route('/winners/<oid>', methods=['GET'])
-def winners_list(oid):
+@app.route('/picks/<oid>', methods=['GET'])
+def picks_list(oid):
     return jsonify(
-        db.winners.find_one({'_id':ObjectId(oid)})
+        db.picks.find_one({'_id':ObjectId(oid)})
     )
 
-@app.route('/winners', methods=['GET'])
-def winners_listall():
-    return jsonify([winner for winner in db.winners.find()])
+@app.route('/picks', methods=['GET'])
+def picks_listall():
+    return jsonify([pick for pick in db.picks.find()])
 
-@app.route('/winners', methods=['POST'])
-def winners_post():
+@app.route('/picks', methods=['POST'])
+def picks_post():
     print(request.form)
-    return jsonify(db.winners.save(request.get_json()))
+    return jsonify(db.picks.save(request.get_json()))
 
 
 if __name__ == '__main__':
